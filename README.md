@@ -2,7 +2,7 @@
 
 [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/smallnest/langgraphgo)
 
-> 🔀 ** Forked from [paulnegz/langgraphgo](https://github.com/paulnegz/langgraphgo)** which is forked from [tmc/langgraphgo](https://github.com/tmc/langgraphgo)** 
+> 🔀 ** Forked from [paulnegz/langgraphgo](https://github.com/paulnegz/langgraphgo)** which is forked from **[tmc/langgraphgo](https://github.com/tmc/langgraphgo)** 
 
 - paulnegz/langgraphgo: Enhanced with streaming, visualization, observability, and production-ready features.
 - smallnest/langgraphgo(this project): 
