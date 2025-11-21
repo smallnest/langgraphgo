@@ -1,13 +1,21 @@
 # 🦜️🔗 LangGraphGo
 
-[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/paulnegz/langgraphgo)
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/smallnest/langgraphgo)
 
-> 🔀 **Forked from [tmc/langgraphgo](https://github.com/tmc/langgraphgo)** - Enhanced with streaming, visualization, observability, and production-ready features.
+> 🔀 ** Forked from [paulnegz/langgraphgo](https://github.com/paulnegz/langgraphgo)** which is forked from [tmc/langgraphgo](https://github.com/tmc/langgraphgo)** 
+
+- paulnegz/langgraphgo: Enhanced with streaming, visualization, observability, and production-ready features.
+- smallnest/langgraphgo(this project): 
+  - Enhanced with StatefulGrapgh: changes/changelog.2025-11-21-09.md
+  - Enhanced Persitence: [TODO]
+  - Enhanced Interrupts: [TODO]
+  - Enhhanced time-travel: [TODO]
+  - Enhanced Memory: [TODO]
 
 ## 📦 Installation
 
 ```bash
-go get github.com/paulnegz/langgraphgo
+go get github.com/smallnest/langgraphgo
 ```
 
 ## 🚀 Features

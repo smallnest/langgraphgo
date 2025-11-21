@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/paulnegz/langgraphgo/graph"
+	"github.com/smallnest/langgraphgo/graph"
 )
 
 func TestSubgraph(t *testing.T) {

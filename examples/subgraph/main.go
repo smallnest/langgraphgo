@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/paulnegz/langgraphgo/graph"
+	"github.com/smallnest/langgraphgo/graph"
 )
 
 type Document struct {

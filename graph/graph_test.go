@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/paulnegz/langgraphgo/graph"
+	"github.com/smallnest/langgraphgo/graph"
 	"github.com/tmc/langchaingo/llms"
 	"github.com/tmc/langchaingo/llms/openai"
 )

@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/paulnegz/langgraphgo/graph"
+	"github.com/smallnest/langgraphgo/graph"
 	"github.com/tmc/langchaingo/llms"
 )
 

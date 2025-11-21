@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/paulnegz/langgraphgo/graph"
+	"github.com/smallnest/langgraphgo/graph"
 )
 
 func TestParallelNodes(t *testing.T) {

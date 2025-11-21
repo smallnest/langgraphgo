@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/paulnegz/langgraphgo/graph"
+	"github.com/smallnest/langgraphgo/graph"
 )
 
 func TestTracer_StartEndSpan(t *testing.T) {

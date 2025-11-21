@@ -83,7 +83,6 @@ func (m *MemoryCheckpointStore) List(_ context.Context, executionID string) ([]*
 			checkpoints = append(checkpoints, checkpoint)
 		}
 	}
-
 	return checkpoints, nil
 }
 

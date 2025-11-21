@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/paulnegz/langgraphgo/graph"
+	"github.com/smallnest/langgraphgo/graph"
 )
 
 func TestExporter_DrawMermaid(t *testing.T) {

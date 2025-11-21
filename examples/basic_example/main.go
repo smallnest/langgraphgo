@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/paulnegz/langgraphgo/graph"
+	"github.com/smallnest/langgraphgo/graph"
 )
 
 // Simple example demonstrating all major features
