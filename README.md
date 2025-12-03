@@ -111,6 +111,7 @@ func main() {
 - **[Time Travel / HITL](./examples/time_travel/)** - Inspect, edit, and fork state history
 - **[Dynamic Interrupt](./examples/dynamic_interrupt/)** - Pause execution from within a node
 - **[Durable Execution](./examples/durable_execution/)** - Crash recovery and resuming execution
+- **[GoSkills Integration](./examples/goskills_example/)** - Integration with GoSkills (New!)
 
 ## 🔧 Key Concepts
 

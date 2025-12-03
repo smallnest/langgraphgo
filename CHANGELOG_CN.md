@@ -46,6 +46,7 @@
 - **Tool 包**: 添加了新的 `tool` 包，便于集成外部工具。
 - **搜索工具**: 实现了与 `langchaingo` 接口兼容的 `TavilySearch` 和 `ExaSearch` 工具。
 - **Agent 集成**: 更新了 `ReAct` Agent 以支持为 OpenAI 兼容 API 生成工具参数 Schema 和解析参数。
+- **GoSkills 适配器**: 添加了 `adapter/goskills` 以集成 [GoSkills](github.com/smallnest/goskills) 作为工具。
 
 ### 示例 (Examples)
 - 添加了涵盖以下内容的综合示例：
@@ -64,6 +65,7 @@
   - **Exa 搜索工具** (新增)
   - **Create Agent** (新增)
   - **Durable Execution** (新增)
+  - **GoSkills 集成** (新增)
 - **通用**: 改进了所有示例的可靠性和正确性。
 
 ## [0.1.0] - 2025-01-02

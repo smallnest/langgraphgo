@@ -111,6 +111,7 @@ func main() {
 - **[Time Travel / HITL](./examples/time_travel/)** - 检查、编辑和分叉状态历史
 - **[Dynamic Interrupt](./examples/dynamic_interrupt/)** - 在节点内部暂停执行
 - **[Durable Execution](./examples/durable_execution/)** - 崩溃恢复和从检查点恢复执行
+- **[GoSkills 集成](./examples/goskills_example/)** - GoSkills 集成 (新增!)
 
 ## 🔧 核心概念
 

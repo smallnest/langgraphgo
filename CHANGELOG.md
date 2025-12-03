@@ -46,6 +46,7 @@
 - **Tool Package**: Added a new `tool` package for easy integration of external tools.
 - **Search Tools**: Implemented `TavilySearch` and `ExaSearch` tools compatible with `langchaingo` interfaces.
 - **Agent Integration**: Updated `ReAct` agent to support tool parameter schema generation and argument parsing for OpenAI-compatible APIs.
+- **GoSkills Adapter**: Added `adapter/goskills` to integrate [GoSkills](github.com/smallnest/goskills) as tools.
 
 ### Examples
 - Added comprehensive examples for:
@@ -64,6 +65,7 @@
   - **Exa Search Tool** (new)
   - **Create Agent** (new)
   - **Durable Execution** (new)
+  - **GoSkills Integration** (new)
 - **General**: Improved reliability and correctness of all examples.
 
 ## [0.1.0] - 2025-01-02

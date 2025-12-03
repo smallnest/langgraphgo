@@ -57,3 +57,4 @@
 - **[LangChain 集成 (LangChain Integration)](langchain_example/README_CN.md)**: 使用 LangChain 工具和模型。
 - **[Tavily Search](tool_tavily/README_CN.md)**: 使用 Tavily 搜索工具和 ReAct Agent。
 - **[Exa Search](tool_exa/README_CN.md)**: 使用 Exa 搜索工具和 ReAct Agent。
+- **[GoSkills 集成 (GoSkills Integration)](goskills_example/README_CN.md)**: 将 GoSkills 作为工具集成到 Agent 中。

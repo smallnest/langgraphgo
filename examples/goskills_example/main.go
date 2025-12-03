@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/smallnest/goskills"
 	adapter "github.com/smallnest/langgraphgo/adapter/goskills"
 	"github.com/smallnest/langgraphgo/prebuilt"
 	"github.com/tmc/langchaingo/llms"
 	"github.com/tmc/langchaingo/llms/openai"
+	"github.com/tmc/langchaingo/tools"
 )
 
 func main() {
@@ -49,26 +51,34 @@ func main() {
 		log.Fatal("No skills found")
 	}
 
-	// Pick the first skill
-	var skill *goskills.SkillPackage
-	for _, p := range packages {
-		skill = p
-		break
-	}
-	fmt.Printf("Using skill: %s\n", skill.Meta.Name)
+	// 3. Convert Skills to Tools
+	var allTools []tools.Tool
+	var allSystemMessages strings.Builder
 
-	// 3. Convert Skill to Tools
-	tools, err := adapter.SkillsToTools(*skill)
-	if err != nil {
-		log.Fatal(err)
+	allSystemMessages.WriteString("You are a helpful assistant that can use skills.\n\n")
+
+	for _, skill := range packages {
+		fmt.Printf("Loading skill: %s\n", skill.Meta.Name)
+		skillTools, err := adapter.SkillsToTools(*skill)
+		if err != nil {
+			log.Printf("Failed to convert skill %s to tools: %v", skill.Meta.Name, err)
+			continue
+		}
+		allTools = append(allTools, skillTools...)
+
+		allSystemMessages.WriteString(fmt.Sprintf("Skill: %s\n%s\n\n", skill.Meta.Name, skill.Body))
+
+		for _, t := range skillTools {
+			fmt.Printf("Tool: %s, Description: %s\n", t.Name(), t.Description())
+		}
 	}
-	for _, t := range tools {
-		fmt.Printf("Tool: %s, Description: %s\n", t.Name(), t.Description())
+
+	if len(allTools) == 0 {
+		log.Fatal("No tools found from skills")
 	}
 
 	// 4. Create Agent
-	systemMessage := "You are a helpful assistant that can use skills.\n\n" + skill.Body
-	agent, err := prebuilt.CreateAgent(llm, tools, prebuilt.WithSystemMessage(systemMessage))
+	agent, err := prebuilt.CreateAgent(llm, allTools, prebuilt.WithSystemMessage(allSystemMessages.String()))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -76,13 +86,6 @@ func main() {
 	// 5. Run Agent
 	ctx := context.Background()
 	input := "Please use the available skill to say hello to the world."
-
-	// If the dummy skill is "hello_world", we can ask it to run.
-	if skill.Meta.Name == "hello_world" {
-		input = "Run the hello_world skill."
-	}
-
-	fmt.Printf("User: %s\n", input)
 
 	resp, err := agent.Invoke(ctx, map[string]interface{}{
 		"messages": []llms.MessageContent{

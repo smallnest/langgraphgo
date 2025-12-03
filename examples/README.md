@@ -57,3 +57,4 @@ This directory contains various examples demonstrating the features of LangGraph
 - **[LangChain Integration](langchain_example/README.md)**: Using LangChain tools and models.
 - **[Tavily Search](tool_tavily/README.md)**: Using Tavily search tool with ReAct agent.
 - **[Exa Search](tool_exa/README.md)**: Using Exa search tool with ReAct agent.
+- **[GoSkills Integration](goskills_example/README.md)**: Integrating GoSkills as tools for agents.
