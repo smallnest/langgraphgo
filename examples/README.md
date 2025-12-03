@@ -34,6 +34,7 @@ This directory contains various examples demonstrating the features of LangGraph
 
 ## Pre-built Agents
 - **[Create Agent](create_agent/README.md)**: Easy way to create an agent with options.
+- **[Dynamic Skill Agent](dynamic_skill_agent/README.md)**: Agent with dynamic skill discovery and selection.
 - **[ReAct Agent](react_agent/README.md)**: Reason and Action agent using tools.
 - **[Supervisor](supervisor/README.md)**: Multi-agent orchestration using a supervisor.
 - **[Swarm](swarm/README.md)**: Multi-agent collaboration using handoffs.

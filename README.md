@@ -103,6 +103,7 @@ func main() {
 - **[Subgraphs](./examples/subgraphs/)** - Nested graph composition
 - **[Swarm](./examples/swarm/)** - Multi-agent collaboration
 - **[Create Agent](./examples/create_agent/)** - Flexible agent creation with options (New!)
+- **[Dynamic Skill Agent](./examples/dynamic_skill_agent/)** - Agent with dynamic skill discovery and selection (New!)
 - **[State Schema](./examples/state_schema/)** - Complex state management with Reducers
 - **[Smart Messages](./examples/smart_messages/)** - Intelligent message merging (Upserts)
 - **[Command API](./examples/command_api/)** - Dynamic control flow

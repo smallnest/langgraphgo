@@ -64,6 +64,7 @@
   - **Tavily 搜索工具** (新增)
   - **Exa 搜索工具** (新增)
   - **Create Agent** (新增)
+  - **动态技能代理 (Dynamic Skill Agent)** (新增)
   - **Durable Execution** (新增)
   - **GoSkills 集成** (新增)
 - **通用**: 改进了所有示例的可靠性和正确性。

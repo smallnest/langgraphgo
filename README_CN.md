@@ -103,6 +103,7 @@ func main() {
 - **[子图](./examples/subgraphs/)** - 嵌套图组合
 - **[Swarm](./examples/swarm/)** - 多 Agent 协作
 - **[Create Agent](./examples/create_agent/)** - 使用选项灵活创建 Agent (新增!)
+- **[动态技能代理 (Dynamic Skill Agent)](./examples/dynamic_skill_agent/)** - 具有动态技能发现和选择功能的代理 (新增!)
 - **[State Schema](./examples/state_schema/)** - 使用 Reducer 进行复杂状态管理
 - **[智能消息](./examples/smart_messages/)** - 智能消息合并 (Upserts)
 - **[Command API](./examples/command_api/)** - 动态流控制

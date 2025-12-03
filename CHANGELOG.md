@@ -64,6 +64,7 @@
   - **Tavily Search Tool** (new)
   - **Exa Search Tool** (new)
   - **Create Agent** (new)
+  - **Dynamic Skill Agent** (new)
   - **Durable Execution** (new)
   - **GoSkills Integration** (new)
 - **General**: Improved reliability and correctness of all examples.
