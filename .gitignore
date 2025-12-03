@@ -3,3 +3,5 @@ lint-ci.sh
 
 deerflow
 !deerflow/
+
+.qoder/
