@@ -1,10 +1,10 @@
-package prebuilt
+package memory
 
 import (
 	"context"
 
 	"github.com/tmc/langchaingo/llms"
-	"github.com/tmc/langchaingo/memory"
+	langchainmemory "github.com/tmc/langchaingo/memory"
 	"github.com/tmc/langchaingo/schema"
 )
 
@@ -34,25 +34,25 @@ func NewLangChainMemory(buffer schema.Memory) *LangChainMemory {
 }
 
 // NewConversationBufferMemory creates a new conversation buffer memory with default settings
-func NewConversationBufferMemory(options ...memory.ConversationBufferOption) *LangChainMemory {
+func NewConversationBufferMemory(options ...langchainmemory.ConversationBufferOption) *LangChainMemory {
 	return &LangChainMemory{
-		buffer: memory.NewConversationBuffer(options...),
+		buffer: langchainmemory.NewConversationBuffer(options...),
 	}
 }
 
 // NewConversationWindowBufferMemory creates a new conversation window buffer memory
 // that keeps only the last N conversation turns
-func NewConversationWindowBufferMemory(windowSize int, options ...memory.ConversationBufferOption) *LangChainMemory {
+func NewConversationWindowBufferMemory(windowSize int, options ...langchainmemory.ConversationBufferOption) *LangChainMemory {
 	return &LangChainMemory{
-		buffer: memory.NewConversationWindowBuffer(windowSize, options...),
+		buffer: langchainmemory.NewConversationWindowBuffer(windowSize, options...),
 	}
 }
 
 // NewConversationTokenBufferMemory creates a new conversation token buffer memory
 // that keeps conversation history within a token limit
-func NewConversationTokenBufferMemory(llm llms.Model, maxTokenLimit int, options ...memory.ConversationBufferOption) *LangChainMemory {
+func NewConversationTokenBufferMemory(llm llms.Model, maxTokenLimit int, options ...langchainmemory.ConversationBufferOption) *LangChainMemory {
 	return &LangChainMemory{
-		buffer: memory.NewConversationTokenBuffer(llm, maxTokenLimit, options...),
+		buffer: langchainmemory.NewConversationTokenBuffer(llm, maxTokenLimit, options...),
 	}
 }
 
@@ -98,13 +98,13 @@ func (m *LangChainMemory) GetMessages(ctx context.Context) ([]llms.ChatMessage, 
 
 // ChatMessageHistory provides direct access to chat message history
 type ChatMessageHistory struct {
-	history *memory.ChatMessageHistory
+	history *langchainmemory.ChatMessageHistory
 }
 
 // NewChatMessageHistory creates a new chat message history
-func NewChatMessageHistory(options ...memory.ChatMessageHistoryOption) *ChatMessageHistory {
+func NewChatMessageHistory(options ...langchainmemory.ChatMessageHistoryOption) *ChatMessageHistory {
 	return &ChatMessageHistory{
-		history: memory.NewChatMessageHistory(options...),
+		history: langchainmemory.NewChatMessageHistory(options...),
 	}
 }
 

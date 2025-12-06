@@ -1,4 +1,4 @@
-package prebuilt
+package memory
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tmc/langchaingo/llms"
-	"github.com/tmc/langchaingo/memory"
+	langchainmemory "github.com/tmc/langchaingo/memory"
 )
 
 func TestLangChainMemory_ConversationBuffer(t *testing.T) {
@@ -15,7 +15,7 @@ func TestLangChainMemory_ConversationBuffer(t *testing.T) {
 
 	// Create a conversation buffer memory with return messages enabled
 	mem := NewConversationBufferMemory(
-		memory.WithReturnMessages(true),
+		langchainmemory.WithReturnMessages(true),
 	)
 
 	// Test SaveContext
@@ -63,7 +63,7 @@ func TestLangChainMemory_ConversationWindowBuffer(t *testing.T) {
 
 	// Create a conversation window buffer that keeps only the last 2 turns (4 messages)
 	mem := NewConversationWindowBufferMemory(2,
-		memory.WithReturnMessages(true),
+		langchainmemory.WithReturnMessages(true),
 	)
 
 	// Add 3 conversation turns
@@ -149,7 +149,7 @@ func TestChatMessageHistory_WithPreviousMessages(t *testing.T) {
 	}
 
 	history := NewChatMessageHistory(
-		memory.WithPreviousMessages(previousMessages),
+		langchainmemory.WithPreviousMessages(previousMessages),
 	)
 
 	// Verify previous messages are loaded
@@ -173,10 +173,10 @@ func TestLangChainMemory_CustomKeys(t *testing.T) {
 
 	// Create memory with custom input/output keys
 	mem := NewConversationBufferMemory(
-		memory.WithInputKey("user_input"),
-		memory.WithOutputKey("ai_output"),
-		memory.WithMemoryKey("chat_history"),
-		memory.WithReturnMessages(true),
+		langchainmemory.WithInputKey("user_input"),
+		langchainmemory.WithOutputKey("ai_output"),
+		langchainmemory.WithMemoryKey("chat_history"),
+		langchainmemory.WithReturnMessages(true),
 	)
 
 	// Save context with custom keys
@@ -210,8 +210,8 @@ func TestLangChainMemory_WithChatHistory(t *testing.T) {
 
 	// Create memory with the custom chat history
 	mem := NewConversationBufferMemory(
-		memory.WithChatHistory(chatHistory.GetHistory()),
-		memory.WithReturnMessages(true),
+		langchainmemory.WithChatHistory(chatHistory.GetHistory()),
+		langchainmemory.WithReturnMessages(true),
 	)
 
 	// Verify initial message is present
