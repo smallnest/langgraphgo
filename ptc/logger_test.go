@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/smallnest/langgraphgo/log"
 	"github.com/tmc/langchaingo/tools"
 )
 
@@ -13,7 +14,7 @@ import (
 func TestLogger(t *testing.T) {
 	// Create a buffer to capture log output
 	var buf bytes.Buffer
-	logger := NewCustomLogger(&buf, LogLevelDebug)
+	logger := log.NewCustomLogger(&buf, log.LogLevelDebug)
 
 	toolList := []tools.Tool{
 		newMockTool("test", "Test tool", "ok"),
@@ -63,24 +64,24 @@ print(result)
 func TestLogLevels(t *testing.T) {
 	tests := []struct {
 		name          string
-		level         LogLevel
+		level         log.LogLevel
 		shouldContain []string
 		shouldNotContain []string
 	}{
 		{
 			name:          "Debug level",
-			level:         LogLevelDebug,
+			level:         log.LogLevelDebug,
 			shouldContain: []string{"[DEBUG]", "[INFO]", "[WARN]", "[ERROR]"},
 		},
 		{
 			name:          "Info level",
-			level:         LogLevelInfo,
+			level:         log.LogLevelInfo,
 			shouldContain: []string{"[INFO]", "[WARN]", "[ERROR]"},
 			shouldNotContain: []string{"[DEBUG]"},
 		},
 		{
 			name:          "Error level",
-			level:         LogLevelError,
+			level:         log.LogLevelError,
 			shouldContain: []string{"[ERROR]"},
 			shouldNotContain: []string{"[DEBUG]", "[INFO]", "[WARN]"},
 		},
@@ -89,7 +90,7 @@ func TestLogLevels(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
-			logger := NewCustomLogger(&buf, tt.level)
+			logger := log.NewCustomLogger(&buf, tt.level)
 
 			// Log messages at all levels
 			logger.Debug("debug message")
@@ -116,7 +117,7 @@ func TestLogLevels(t *testing.T) {
 
 // TestNoOpLogger tests that NoOpLogger doesn't produce any output
 func TestNoOpLogger(t *testing.T) {
-	logger := &NoOpLogger{}
+	logger := &log.NoOpLogger{}
 
 	// These should not panic or produce output
 	logger.Debug("test")
@@ -128,15 +129,15 @@ func TestNoOpLogger(t *testing.T) {
 // TestLogLevelString tests LogLevel.String()
 func TestLogLevelString(t *testing.T) {
 	tests := []struct {
-		level    LogLevel
+		level    log.LogLevel
 		expected string
 	}{
-		{LogLevelDebug, "DEBUG"},
-		{LogLevelInfo, "INFO"},
-		{LogLevelWarn, "WARN"},
-		{LogLevelError, "ERROR"},
-		{LogLevelNone, "NONE"},
-		{LogLevel(999), "UNKNOWN(999)"},
+		{log.LogLevelDebug, "DEBUG"},
+		{log.LogLevelInfo, "INFO"},
+		{log.LogLevelWarn, "WARN"},
+		{log.LogLevelError, "ERROR"},
+		{log.LogLevelNone, "NONE"},
+		{log.LogLevel(999), "UNKNOWN(999)"},
 	}
 
 	for _, tt := range tests {

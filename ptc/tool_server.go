@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/smallnest/langgraphgo/log"
 	"github.com/tmc/langchaingo/tools"
 )
 
@@ -20,7 +21,7 @@ type ToolServer struct {
 	port    int
 	mu      sync.RWMutex
 	started bool
-	logger  Logger // Optional logger for debugging and monitoring
+	logger  log.Logger // Optional logger for debugging and monitoring
 }
 
 // ToolRequest represents a tool execution request
@@ -49,12 +50,12 @@ func NewToolServer(toolList []tools.Tool) *ToolServer {
 		tools:   toolMap,
 		port:    0, // Will be assigned automatically
 		started: false,
-		logger:  &NoOpLogger{}, // Default to no logging
+		logger:  &log.NoOpLogger{}, // Default to no logging
 	}
 }
 
 // SetLogger sets a custom logger for the tool server
-func (ts *ToolServer) SetLogger(logger Logger) {
+func (ts *ToolServer) SetLogger(logger log.Logger) {
 	ts.mu.Lock()
 	defer ts.mu.Unlock()
 	ts.logger = logger

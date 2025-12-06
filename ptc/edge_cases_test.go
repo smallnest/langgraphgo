@@ -6,12 +6,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/smallnest/langgraphgo/log"
 	"github.com/tmc/langchaingo/tools"
 )
 
 // TestWithLoggerFluentAPI tests the WithLogger fluent API
 func TestWithLoggerFluentAPI(t *testing.T) {
-	logger := NewDefaultLogger(LogLevelInfo)
+	logger := log.NewDefaultLogger(log.LogLevelInfo)
 	toolList := []tools.Tool{
 		newMockTool("test", "Test tool", "ok"),
 	}

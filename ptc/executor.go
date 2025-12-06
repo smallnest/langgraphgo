@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/smallnest/langgraphgo/log"
 	"github.com/tmc/langchaingo/tools"
 )
 
@@ -48,7 +49,7 @@ type CodeExecutor struct {
 	WorkDir    string
 	Mode       ExecutionMode
 	toolServer *ToolServer
-	logger     Logger // Optional logger for debugging and monitoring
+	logger     log.Logger // Optional logger for debugging and monitoring
 }
 
 // ExecutionResult contains the result of code execution
@@ -73,7 +74,7 @@ func NewCodeExecutorWithMode(language ExecutionLanguage, toolList []tools.Tool, 
 		Timeout:  5 * time.Minute,
 		WorkDir:  os.TempDir(),
 		Mode:     mode,
-		logger:   &NoOpLogger{}, // Default to no logging
+		logger:   &log.NoOpLogger{}, // Default to no logging
 	}
 
 	// Create tool server for both modes
@@ -85,7 +86,7 @@ func NewCodeExecutorWithMode(language ExecutionLanguage, toolList []tools.Tool, 
 }
 
 // SetLogger sets a custom logger for the executor
-func (ce *CodeExecutor) SetLogger(logger Logger) {
+func (ce *CodeExecutor) SetLogger(logger log.Logger) {
 	ce.logger = logger
 	if ce.toolServer != nil {
 		ce.toolServer.SetLogger(logger)
@@ -93,7 +94,7 @@ func (ce *CodeExecutor) SetLogger(logger Logger) {
 }
 
 // WithLogger is a fluent method to set a logger
-func (ce *CodeExecutor) WithLogger(logger Logger) *CodeExecutor {
+func (ce *CodeExecutor) WithLogger(logger log.Logger) *CodeExecutor {
 	ce.SetLogger(logger)
 	return ce
 }

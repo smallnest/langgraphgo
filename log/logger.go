@@ -1,4 +1,4 @@
-package ptc
+package log
 
 import (
 	"fmt"
