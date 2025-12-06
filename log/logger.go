@@ -113,3 +113,43 @@ func (l LogLevel) String() string {
 		return fmt.Sprintf("UNKNOWN(%d)", l)
 	}
 }
+
+// Package-level logger (default is NoOpLogger for zero overhead)
+var defaultLogger Logger = &NoOpLogger{}
+
+// SetDefaultLogger sets the package-level logger
+// This allows users to enable logging globally without passing logger objects around
+func SetDefaultLogger(logger Logger) {
+	defaultLogger = logger
+}
+
+// GetDefaultLogger returns the current package-level logger
+func GetDefaultLogger() Logger {
+	return defaultLogger
+}
+
+// SetLogLevel creates and sets a default logger with the specified log level
+// This is a convenience function for quick logging setup
+func SetLogLevel(level LogLevel) {
+	defaultLogger = NewDefaultLogger(level)
+}
+
+// Debug logs a debug message using the package-level logger
+func Debug(format string, v ...interface{}) {
+	defaultLogger.Debug(format, v...)
+}
+
+// Info logs an informational message using the package-level logger
+func Info(format string, v ...interface{}) {
+	defaultLogger.Info(format, v...)
+}
+
+// Warn logs a warning message using the package-level logger
+func Warn(format string, v ...interface{}) {
+	defaultLogger.Warn(format, v...)
+}
+
+// Error logs an error message using the package-level logger
+func Error(format string, v ...interface{}) {
+	defaultLogger.Error(format, v...)
+}

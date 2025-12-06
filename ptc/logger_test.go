@@ -10,18 +10,22 @@ import (
 	"github.com/tmc/langchaingo/tools"
 )
 
-// TestLogger tests the logging functionality
+// TestLogger tests the logging functionality using package-level logger
 func TestLogger(t *testing.T) {
+	// Save original logger
+	originalLogger := log.GetDefaultLogger()
+	defer log.SetDefaultLogger(originalLogger)
+
 	// Create a buffer to capture log output
 	var buf bytes.Buffer
 	logger := log.NewCustomLogger(&buf, log.LogLevelDebug)
+	log.SetDefaultLogger(logger)
 
 	toolList := []tools.Tool{
 		newMockTool("test", "Test tool", "ok"),
 	}
 
 	executor := NewCodeExecutor(LanguagePython, toolList)
-	executor.SetLogger(logger)
 
 	ctx := context.Background()
 	if err := executor.Start(ctx); err != nil {

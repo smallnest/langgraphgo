@@ -136,3 +136,68 @@ func TestNewDefaultLogger(t *testing.T) {
 		t.Error("NewDefaultLogger returned nil")
 	}
 }
+
+// TestPackageLevelFunctions tests package-level logging functions
+func TestPackageLevelFunctions(t *testing.T) {
+	// Save original logger
+	originalLogger := defaultLogger
+	defer func() {
+		defaultLogger = originalLogger
+	}()
+
+	// Test with custom logger
+	var buf bytes.Buffer
+	SetDefaultLogger(NewCustomLogger(&buf, LogLevelDebug))
+
+	Debug("debug %s", "msg")
+	Info("info %s", "msg")
+	Warn("warn %s", "msg")
+	Error("error %s", "msg")
+
+	output := buf.String()
+
+	expectedMessages := []string{
+		"[DEBUG] debug msg",
+		"[INFO] info msg",
+		"[WARN] warn msg",
+		"[ERROR] error msg",
+	}
+
+	for _, expected := range expectedMessages {
+		if !strings.Contains(output, expected) {
+			t.Errorf("Expected output to contain '%s', got: %s", expected, output)
+		}
+	}
+}
+
+// TestSetLogLevel tests SetLogLevel convenience function
+func TestSetLogLevel(t *testing.T) {
+	// Save original logger
+	originalLogger := defaultLogger
+	defer func() {
+		defaultLogger = originalLogger
+	}()
+
+	SetLogLevel(LogLevelInfo)
+
+	// Verify the logger is set (we can't directly check the type, but we can test behavior)
+	// This is implicitly tested by the package level functions test above
+}
+
+// TestPackageLevelNoOp tests that package-level functions don't panic with default NoOpLogger
+func TestPackageLevelNoOp(t *testing.T) {
+	// Save original logger
+	originalLogger := defaultLogger
+	defer func() {
+		defaultLogger = originalLogger
+	}()
+
+	// Reset to NoOpLogger
+	SetDefaultLogger(&NoOpLogger{})
+
+	// These should not panic
+	Debug("test")
+	Info("test")
+	Warn("test")
+	Error("test")
+}

@@ -10,20 +10,26 @@ import (
 	"github.com/tmc/langchaingo/tools"
 )
 
-// TestWithLoggerFluentAPI tests the WithLogger fluent API
-func TestWithLoggerFluentAPI(t *testing.T) {
-	logger := log.NewDefaultLogger(log.LogLevelInfo)
+// TestPackageLevelLogging tests using package-level logging functions
+func TestPackageLevelLogging(t *testing.T) {
+	// Save original logger
+	originalLogger := log.GetDefaultLogger()
+	defer log.SetDefaultLogger(originalLogger)
+
+	// Enable logging for this test
+	log.SetLogLevel(log.LogLevelInfo)
+
 	toolList := []tools.Tool{
 		newMockTool("test", "Test tool", "ok"),
 	}
 
-	executor := NewCodeExecutor(LanguagePython, toolList).WithLogger(logger)
+	executor := NewCodeExecutor(LanguagePython, toolList)
 
 	if executor == nil {
-		t.Error("WithLogger should return the executor")
+		t.Error("NewCodeExecutor should return the executor")
 	}
 
-	// Verify logger was set
+	// Verify that logging works with package-level logger
 	ctx := context.Background()
 	if err := executor.Start(ctx); err != nil {
 		t.Fatalf("Failed to start executor: %v", err)
