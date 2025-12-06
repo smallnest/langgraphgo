@@ -44,10 +44,7 @@ func main() {
 		log.Fatal("OPENAI_API_KEY environment variable not set")
 	}
 
-	model, err := openai.New(
-		openai.WithModel("gpt-4"),
-		openai.WithToken(apiKey),
-	)
+	model, err := openai.New()
 	if err != nil {
 		log.Fatalf("Failed to create LLM: %v", err)
 	}
