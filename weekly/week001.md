@@ -491,10 +491,24 @@
   - 所有测试通过 ✅
   - 涵盖 Direct/Server 模式、Python/Go 执行、并发、错误处理等
 
+- ✅ **添加全面的日志系统** (commit b71b08c)
+  - Logger 接口：灵活的日志记录
+  - DefaultLogger：使用 Go 标准 log 包
+  - NoOpLogger：无日志场景（默认）
+  - LogLevel 支持：DEBUG, INFO, WARN, ERROR, NONE
+  - CodeExecutor.SetLogger() / WithLogger() 方法
+  - ToolServer 日志集成
+  - 29 个测试通过 ✅
+- ✅ **添加全面的边缘案例测试** (commit 9605af4)
+  - 新增 14 个边缘案例测试
+  - 测试覆盖率：62.9% → 64.1%（+1.2%）
+  - 覆盖边缘情况：空输入、无效输入、大输入、特殊字符、状态转换
+  - 43 个测试全部通过 ✅
+
 ### 待解决
-- 🔲 优化并行执行性能
-- 🔲 改进错误处理和日志记录
-- 🔲 添加更多边缘案例测试
+- 🔲 继续提高测试覆盖率（目标：70%+）
+- 🔲 性能基准测试
+- 🔲 更多 PTC 示例
 
 ---
 
