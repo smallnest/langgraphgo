@@ -8,7 +8,7 @@
 
 ## 📊 本周概览
 
-本周是 LangGraphGo 项目正式启动的第一周，取得了突破性进展。项目从 v0.3.0 起步，经历了 4 个版本迭代（v0.3.0 → v0.3.1 → v0.3.2 → v0.4.0），并开始开发 v0.5.0。目前最新版本为 v0.4.0。完成了 **6 个大型 Showcase 项目**的复刻和文档整合工作，总计提交 **39+ 次**，新增代码超过 **15,000 行**。
+本周是 LangGraphGo 项目正式启动的第一周，取得了突破性进展。项目从 v0.3.0 起步，经历了 4 个版本迭代（v0.3.0 → v0.3.1 → v0.3.2 → v0.4.0），并开始开发 v0.5.0。目前最新版本为 v0.4.0。完成了 **6 个大型 Showcase 项目**的复刻和文档整合工作，搭建了**完整的官方网站和知识库**（233 个 HTML 页面 + 193 个 Markdown 文档），总计提交 **39+ 次**（主仓库），新增代码超过 **15,000 行**。
 
 ### 关键指标
 
@@ -233,6 +233,150 @@
 
 ---
 
+## 🌐 网站与知识库建设
+
+本周完成了项目官方网站和知识库的搭建工作，为用户提供了完整的学习资源。
+
+### 官方网站 (lango-website)
+
+**仓库地址**: https://github.com/smallnest/lango-website
+
+#### 网站结构
+- 📄 **中文站点**: 完整的中文界面和文档
+- 🌍 **英文站点**: 双语支持，国际化
+- 📚 **四大板块**: 案例、文档、示例、知识库
+
+#### 主要页面
+1. **首页** (`index.html`)
+   - 项目简介和核心特性展示
+   - 快速开始和示例入口
+   - 现代化的 UI 设计
+
+2. **案例页面** (`showcases.html`)
+   - 展示 6 个完整的 Showcase 项目
+   - 每个案例包含详细说明和运行指南
+   - 提供 GitHub 链接和文档链接
+
+3. **文档页面** (`docs.html`)
+   - 包含 16+ 个详细指南
+   - API 参考文档
+   - 核心概念讲解
+
+4. **示例页面** (`examples.html`)
+   - 20+ 个代码示例
+   - 覆盖各种使用场景
+   - 完整的代码片段和说明
+
+#### 文档指南（docs/）
+
+**基础指南**
+- ✅ Getting Started - 快速开始
+- ✅ Core Concepts - 核心概念
+- ✅ API Reference - API 参考
+
+**进阶指南**
+- ✅ Guide: Basics - 基础教程
+- ✅ Guide: Advanced Features - 高级特性
+- ✅ Guide: State Management - 状态管理
+- ✅ Guide: StateGraph vs MessageGraph - 图类型对比
+- ✅ Guide: Streaming - 流式处理
+- ✅ Guide: HITL (Human-in-the-Loop) - 人机协作
+- ✅ Guide: Memory & Time Travel - 内存和时间旅行
+- ✅ Guide: Multi-Agent - 多代理系统
+- ✅ Guide: Pre-built Agents - 预构建代理
+- ✅ Guide: CreateAgent vs CreateReactAgent - 代理对比
+- ✅ Guide: RAG - 检索增强生成
+- ✅ Guide: Monitoring - 监控和可观测性
+
+### 知识库 (Wiki)
+
+**位置**: `/repowiki/zh/`
+
+#### Wiki 内容结构
+
+**高级特性** (`高级特性/`)
+- 📖 人机协作 (`人机协作.md`)
+- 📖 可视化 (`可视化.md`)
+- 📖 子图 (`子图.md`)
+- 📖 并行执行 (`并行执行.md`)
+
+**检查点存储** (`检查点存储/`)
+- 📖 检查点存储概述 (`检查点存储.md`)
+- 📖 SQLite 检查点存储 (`SQLite 检查点存储.md`)
+- 📖 Redis 检查点存储 (`Redis 检查点存储.md`)
+- 📖 PostgreSQL 检查点存储 (`PostgreSQL 检查点存储.md`)
+
+**工具集成** (`工具集成/`)
+- 📖 工具集成概述 (`工具集成.md`)
+- 📖 工具执行框架 (`工具执行框架.md`)
+- 📖 具体工具集成 (`具体工具集成.md`)
+
+**预构建组件** (`预构建组件/`)
+- 📖 预构建组件概述 (`预构建组件.md`)
+- 📖 Create Agent (`Create Agent.md`)
+- 📖 RAG 组件系列
+  - 基础 RAG (`基础 RAG.md`)
+  - 条件 RAG (`条件 RAG.md`)
+  - 高级 RAG 系列
+    - 高级 RAG 概述 (`高级 RAG.md`)
+    - 重排序机制 (`重排序机制.md`)
+    - 引用格式化 (`引用格式化.md`)
+
+### 本周网站更新
+
+#### Git 提交记录
+- ✅ `9341c27` - 移除 .claude 配置
+- ✅ `739f2f5` - **更新网站支持 v0.4.0**
+- ✅ `9439dbe` - 移除 .history
+- ✅ `e4be742` - **添加 Wiki 菜单**
+- ✅ `1a5bfdd` - **Markdown 转 HTML**
+- ✅ `c279db6` - 合并 PR #1（社区贡献）
+- ✅ `eec9de2` - **添加 Qoder Repo Wiki**（社区贡献）
+- ✅ `1eb3cfc` - **初始化网站**
+
+#### 网站统计
+
+| 类型 | 数量 | 说明 |
+|------|------|------|
+| HTML 页面 | 233 个 | 包含所有文档和指南页面 |
+| Markdown 文档 | 193 个 | Wiki 源文件 |
+| 指南文档 | 16+ 个 | 详细的使用指南 |
+| 代码示例 | 20+ 个 | 涵盖各种场景 |
+
+#### 网站特色
+
+1. **现代化设计**
+   - 响应式布局
+   - 深色/浅色主题
+   - 优雅的 UI 组件
+
+2. **完整的导航**
+   - 清晰的页面结构
+   - Wiki 知识库集成
+   - 中英文双语切换
+
+3. **丰富的内容**
+   - 6 个完整的 Showcase 案例
+   - 16+ 个详细指南
+   - 20+ 个代码示例
+   - 全面的 API 文档
+
+4. **社区友好**
+   - GitHub 集成
+   - 支持 PR 贡献
+   - Wiki 协作编辑
+
+### 网站与文档对照
+
+| 项目主仓库文档 | 网站文档 | Wiki 文档 |
+|---------------|---------|----------|
+| README.md | index.html | 项目概述.md |
+| Examples/ | examples.html | - |
+| Showcases/ | showcases.html | - |
+| - | docs/ | repowiki/zh/ |
+
+---
+
 ## 💻 技术亮点
 
 ### 1. Planning Mode (#24)
@@ -272,7 +416,9 @@
 - Showcases:         ~10,000 行
 - Examples:          ~3,000 行
 - 文档:              ~15,000 行
-- 总计:              ~33,000 行
+- 网站 (HTML/CSS/JS): ~3,000 行
+- Wiki (Markdown):    ~10,000 行
+- 总计:              ~46,000 行
 ```
 
 ### Git 活动
@@ -343,9 +489,14 @@
 
 - ✅ **第一周完成**: 6 个完整 Showcase 项目
 - ✅ **版本迭代**: 4 个版本发布（v0.3.0 → v0.4.0）
-- ✅ **文档里程碑**: 超过 30 个文档页面
-- ✅ **代码里程碑**: 超过 15,000 行新代码
+- ✅ **文档里程碑**: 超过 30 个文档页面（主仓库）
+- ✅ **代码里程碑**: 超过 15,000 行新代码（主仓库）
 - ✅ **功能里程碑**: PTC 功能开发（革命性突破）
+- ✅ **网站上线**: 完整的官方网站和知识库
+  - 233 个 HTML 页面
+  - 193 个 Markdown 文档
+  - 16+ 个详细指南
+  - 中英双语支持
 
 ---
 
@@ -409,8 +560,12 @@
 
 ### 相关链接
 - **主仓库**: https://github.com/smallnest/langgraphgo
-- **网站**: https://github.com/smallnest/lango-website
-- **文档**: 见各 Showcase 的 README 文件
+- **官方网站仓库**: https://github.com/smallnest/lango-website
+- **网站首页**: index.html (lango-website)
+- **案例展示**: showcases.html
+- **文档中心**: docs.html
+- **知识库**: repowiki/zh/
+- **Showcase 文档**: 见各 Showcase 的 README 文件
 
 ### 版本标签
 - `v0.5.0` - 开发中
