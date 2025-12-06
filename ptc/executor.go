@@ -74,19 +74,18 @@ func NewCodeExecutorWithMode(language ExecutionLanguage, toolList []tools.Tool, 
 		Mode:     mode,
 	}
 
-	// Only create tool server for Server mode
-	// In Direct mode, tools are embedded directly in the Python/Go code
-	// In Server mode, tools are called via HTTP
-	if mode == ModeServer {
-		executor.toolServer = NewToolServer(toolList)
-	}
+	// Create tool server for both modes
+	// In Direct mode: Internal server for generic tools (shell/python/file use embedded execution)
+	// In Server mode: Exposed server for all tools via HTTP
+	executor.toolServer = NewToolServer(toolList)
 
 	return executor
 }
 
-// Start starts the code executor and its tool server (Server mode only)
-// In Direct mode, no server is needed - tools are embedded in code
-// In Server mode, the HTTP server is started for tool access
+// Start starts the code executor and its tool server
+// In both modes, the server is started for tool access:
+// - Direct mode: Internal server for generic tools (not exposed in wrappers)
+// - Server mode: Server URL exposed to user code
 func (ce *CodeExecutor) Start(ctx context.Context) error {
 	if ce.toolServer != nil {
 		return ce.toolServer.Start(ctx)
@@ -94,7 +93,7 @@ func (ce *CodeExecutor) Start(ctx context.Context) error {
 	return nil
 }
 
-// Stop stops the code executor and its tool server (Server mode only)
+// Stop stops the code executor and its tool server
 func (ce *CodeExecutor) Stop(ctx context.Context) error {
 	if ce.toolServer != nil {
 		return ce.toolServer.Stop(ctx)
@@ -103,7 +102,8 @@ func (ce *CodeExecutor) Stop(ctx context.Context) error {
 }
 
 // GetToolServerURL returns the URL of the tool server
-// Only returns a URL in Server mode (empty string in Direct mode)
+// In Server mode, this URL is exposed to user code
+// In Direct mode, returns URL for internal use (not exposed to user)
 func (ce *CodeExecutor) GetToolServerURL() string {
 	if ce.toolServer != nil {
 		return ce.toolServer.GetBaseURL()
@@ -191,10 +191,13 @@ func (ce *CodeExecutor) executeGo(ctx context.Context, code string) (*ExecutionR
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"os/exec"
 	"strings"
@@ -204,6 +207,9 @@ import (
 var _ = json.Marshal
 var _ = fmt.Println
 var _ = strings.Contains
+var _ = bytes.NewBuffer
+var _ = http.Client{}
+var _ = io.ReadAll
 
 // Tool wrapper functions
 %s
@@ -301,18 +307,47 @@ def %s(input_data):
 }
 
 // generatePythonToolWrappersDirect creates Python wrapper functions for tools (direct mode)
-// In direct mode, tools are embedded as local functions, similar to goskills implementation
+// In direct mode, shell/python/file tools are embedded; generic tools use internal server
 func (ce *CodeExecutor) generatePythonToolWrappersDirect() string {
 	var wrappers []string
 
+	serverURL := ce.toolServer.GetBaseURL()
+
 	// Add common imports and utilities for direct tool execution
-	wrapper := `
-# Direct tool execution (embedded tools, no HTTP server)
+	wrapper := fmt.Sprintf(`
+# Direct tool execution (embedded tools for shell/python/file, internal server for generic tools)
 import subprocess
 import json
 import os
 import tempfile
 import sys
+try:
+    import urllib.request
+except ImportError:
+    import urllib2 as urllib
+
+INTERNAL_TOOL_SERVER = "%s"
+
+# Helper function to call generic tools via internal server
+def _call_generic_tool(tool_name, tool_input):
+    """Call a generic tool through the internal tool server"""
+    try:
+        url = INTERNAL_TOOL_SERVER + "/call"
+        data = json.dumps({
+            "tool_name": tool_name,
+            "input": tool_input
+        }).encode('utf-8')
+
+        req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'})
+        response = urllib.request.urlopen(req)
+        result = json.loads(response.read().decode('utf-8'))
+
+        if result.get("success"):
+            return result.get("result", "")
+        else:
+            return f"Error calling tool {tool_name}: {result.get('error', 'Unknown error')}"
+    except Exception as e:
+        return f"Error calling tool {tool_name}: {str(e)}"
 
 # Helper function to run shell commands
 def _run_shell(code, args=None):
@@ -371,7 +406,7 @@ def _write_file(file_path, content):
         return f"Successfully wrote to {file_path}"
     except Exception as e:
         return f"File write error: {str(e)}"
-`
+`, serverURL)
 	wrappers = append(wrappers, wrapper)
 
 	// Generate embedded tool functions based on tool name patterns
@@ -472,17 +507,20 @@ def %s(input_data):
         return f"Error in %s: {str(e)}"
 `, funcName, tool.Description(), tool.Name())
 		} else {
-			// Generic tool - call through subprocess to actual tool.Call()
-			// This is a fallback for tools we don't have embedded implementations for
+			// Generic tool - call via internal tool server
 			funcImpl = fmt.Sprintf(`
 def %s(input_data):
     """
     %s
-    Note: This tool uses subprocess fallback. For better performance, use embedded tools.
+    Generic tool called via internal server.
     """
-    # For generic tools, we'd need to call the actual Go tool
-    # This is a placeholder that shows the tool is available
-    return f"Tool %s called with input: {str(input_data)}"
+    # Convert input to JSON string if it's a dict
+    if isinstance(input_data, dict):
+        input_str = json.dumps(input_data)
+    else:
+        input_str = str(input_data)
+
+    return _call_generic_tool("%s", input_str)
 `, funcName, tool.Description(), tool.Name())
 		}
 
@@ -573,13 +611,66 @@ func %s(ctx context.Context, input string) (string, error) {
 }
 
 // generateGoToolWrappersDirect creates Go wrapper functions for tools (direct mode)
-// In direct mode, tools are embedded as local functions similar to goskills implementation
+// In direct mode, shell/python/file tools are embedded; generic tools use internal server
 func (ce *CodeExecutor) generateGoToolWrappersDirect() string {
 	var wrappers []string
 
+	serverURL := ce.toolServer.GetBaseURL()
+
 	// Add common helper functions for direct tool execution
 	// (imports are in the main template)
-	wrapper := `
+	wrapper := fmt.Sprintf(`
+// Internal tool server URL for generic tools
+const internalToolServer = "%s"
+
+// Helper function to call generic tools via internal server
+func callGenericTool(ctx context.Context, toolName string, input string) (string, error) {
+	requestBody := map[string]interface{}{
+		"tool_name": toolName,
+		"input":     input,
+	}
+
+	jsonData, err := json.Marshal(requestBody)
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal request: %%w", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "POST", internalToolServer+"/call", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return "", fmt.Errorf("failed to create request: %%w", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("failed to call tool: %%w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", fmt.Errorf("failed to read response: %%w", err)
+	}
+
+	var result map[string]interface{}
+	if err := json.Unmarshal(body, &result); err != nil {
+		return "", fmt.Errorf("failed to unmarshal response: %%w", err)
+	}
+
+	if success, ok := result["success"].(bool); ok && success {
+		if resultStr, ok := result["result"].(string); ok {
+			return resultStr, nil
+		}
+	}
+
+	errorMsg := "unknown error"
+	if errStr, ok := result["error"].(string); ok {
+		errorMsg = errStr
+	}
+	return "", fmt.Errorf("tool execution failed: %%s", errorMsg)
+}
+
 // Helper function to run shell commands
 func runShell(ctx context.Context, code string, args []string) (string, error) {
 	tmpfile, err := ioutil.TempFile("", "shell-*.sh")
@@ -640,9 +731,9 @@ func writeFile(filePath string, content string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("Successfully wrote to %s", filePath), nil
+	return fmt.Sprintf("Successfully wrote to %%s", filePath), nil
 }
-`
+`, serverURL)
 	wrappers = append(wrappers, wrapper)
 
 	// Generate embedded tool functions based on tool name patterns
@@ -764,11 +855,11 @@ func %s(ctx context.Context, input string) (string, error) {
 	return writeFile(filePath, content)
 }`, tool.Name(), tool.Description(), funcName)
 		} else {
-			// Generic tool - placeholder
+			// Generic tool - call via internal tool server
 			funcImpl = fmt.Sprintf(`
-// %s: %s (Generic tool - placeholder)
+// %s: %s (Generic tool called via internal server)
 func %s(ctx context.Context, input string) (string, error) {
-	return fmt.Sprintf("Tool %s called with input: %%s", input), nil
+	return callGenericTool(ctx, "%s", input)
 }`, tool.Name(), tool.Description(), funcName, tool.Name())
 		}
 

@@ -23,21 +23,20 @@ func TestModeDirectExecution(t *testing.T) {
 	executor := ptc.NewCodeExecutorWithMode(ptc.LanguagePython, tools, ptc.ModeDirect)
 	ctx := context.Background()
 
-	// Start the executor (Direct mode should NOT start a server)
+	// Start the executor (Direct mode uses internal server for generic tools)
 	if err := executor.Start(ctx); err != nil {
 		t.Fatalf("Failed to start executor: %v", err)
 	}
 	defer executor.Stop(ctx)
 
-	// Verify tool server URL is empty in Direct mode (no server needed)
+	// Verify tool server URL is available (used internally for generic tools)
 	serverURL := executor.GetToolServerURL()
-	if serverURL != "" {
-		t.Error("Expected empty tool server URL in Direct mode, got:", serverURL)
+	if serverURL == "" {
+		t.Error("Expected non-empty tool server URL in Direct mode (for internal use)")
 	}
 
-	// Test Python code that calls tools
-	// Since echo doesn't match any known pattern, it returns placeholder
-	// So let's just verify the code executes without errors
+	// Test Python code that calls a generic tool
+	// Generic tools (like echo) are called via internal server
 	code := `
 result = echo("hello")
 print(result)
@@ -48,9 +47,9 @@ print(result)
 		t.Fatalf("Failed to execute code: %v", err)
 	}
 
-	// In Direct mode, generic tools return a placeholder message
-	if !strings.Contains(result.Output, "echo called with input") {
-		t.Errorf("Expected output to contain 'echo called with input', got: %s", result.Output)
+	// In Direct mode, generic tools should call through internal server and return actual result
+	if !strings.Contains(result.Output, "echoed") {
+		t.Errorf("Expected output to contain 'echoed', got: %s", result.Output)
 	}
 }
 
@@ -154,10 +153,10 @@ fmt.Println(result)
 		t.Fatalf("Failed to execute Go code: %v", err)
 	}
 
-	// In Direct mode with default executor, generic tools return placeholder message
-	// Since "greet" doesn't match any known pattern (shell/python/file)
-	if !strings.Contains(result.Output, "greet called with input") {
-		t.Errorf("Expected output to contain 'greet called with input', got: %s", result.Output)
+	// In Direct mode, generic tools (like "greet") are called via internal server
+	// and should return the actual tool result
+	if !strings.Contains(result.Output, "Hello") {
+		t.Errorf("Expected output to contain 'Hello', got: %s", result.Output)
 	}
 }
 
