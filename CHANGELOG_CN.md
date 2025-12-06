@@ -48,7 +48,7 @@
   - 最佳实践和用例指导
 
 ### 网站与知识库
-- **官方网站**: 在 https://github.com/smallnest/lango-website 建立完整网站
+- **官方网站**: http://lango.rpcx.io (源码: https://github.com/smallnest/lango-website)
   - 233 个 HTML 页面，支持中英双语
   - 16+ 个详细指南（快速开始、高级特性、状态管理等）
   - 展示 6 个完整项目的案例画廊

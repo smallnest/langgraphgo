@@ -239,6 +239,7 @@
 
 ### 官方网站 (lango-website)
 
+**网站地址**: http://lango.rpcx.io
 **仓库地址**: https://github.com/smallnest/lango-website
 
 #### 网站结构
@@ -560,11 +561,12 @@
 
 ### 相关链接
 - **主仓库**: https://github.com/smallnest/langgraphgo
-- **官方网站仓库**: https://github.com/smallnest/lango-website
-- **网站首页**: index.html (lango-website)
-- **案例展示**: showcases.html
-- **文档中心**: docs.html
-- **知识库**: repowiki/zh/
+- **官方网站**: http://lango.rpcx.io
+- **网站源码**: https://github.com/smallnest/lango-website
+- **网站首页**: http://lango.rpcx.io/index.html
+- **案例展示**: http://lango.rpcx.io/showcases.html
+- **文档中心**: http://lango.rpcx.io/docs.html
+- **知识库**: http://lango.rpcx.io/repowiki/zh/
 - **Showcase 文档**: 见各 Showcase 的 README 文件
 
 ### 版本标签

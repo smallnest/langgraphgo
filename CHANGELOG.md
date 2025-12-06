@@ -48,7 +48,7 @@
   - Best practices and use case guidance
 
 ### Website & Knowledge Base
-- **Official Website**: Established complete website at https://github.com/smallnest/lango-website
+- **Official Website**: http://lango.rpcx.io (source: https://github.com/smallnest/lango-website)
   - 233 HTML pages with bilingual support
   - 16+ detailed guides (Getting Started, Advanced Features, State Management, etc.)
   - Showcase gallery with 6 complete projects
