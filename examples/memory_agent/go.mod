@@ -1,4 +1,4 @@
-module github.com/smallnest/langgraphgo/examples/memory_strategies
+module github.com/smallnest/langgraphgo/examples/memory_agent
 
 go 1.23.3
 
