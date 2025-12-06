@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/smallnest/langgraphgo/prebuilt"
+	"github.com/smallnest/langgraphgo/memory"
 	"github.com/tmc/langchaingo/llms"
-	"github.com/tmc/langchaingo/memory"
+	langchainmemory "github.com/tmc/langchaingo/memory"
 )
 
 func main() {
@@ -31,19 +31,19 @@ func main() {
 // runChatbotSimulation simulates a chatbot conversation with memory
 func runChatbotSimulation(ctx context.Context, memoryType string, windowSize int) {
 	// Create memory based on type
-	var mem *prebuilt.LangChainMemory
+	var mem *memory.LangChainMemory
 	switch memoryType {
 	case "buffer":
-		mem = prebuilt.NewConversationBufferMemory(
-			memory.WithReturnMessages(true),
+		mem = memory.NewConversationBufferMemory(
+			langchainmemory.WithReturnMessages(true),
 		)
 	case "window":
-		mem = prebuilt.NewConversationWindowBufferMemory(windowSize,
-			memory.WithReturnMessages(true),
+		mem = memory.NewConversationWindowBufferMemory(windowSize,
+			langchainmemory.WithReturnMessages(true),
 		)
 	default:
-		mem = prebuilt.NewConversationBufferMemory(
-			memory.WithReturnMessages(true),
+		mem = memory.NewConversationBufferMemory(
+			langchainmemory.WithReturnMessages(true),
 		)
 	}
 
@@ -124,16 +124,16 @@ func runChatbotSimulation(ctx context.Context, memoryType string, windowSize int
 // demonstrateMemoryPersistence shows how memory persists across interactions
 func demonstrateMemoryPersistence(ctx context.Context) {
 	// Create a custom chat history
-	chatHistory := prebuilt.NewChatMessageHistory()
+	chatHistory := memory.NewChatMessageHistory()
 
 	// Add initial messages
 	chatHistory.AddUserMessage(ctx, "I'm learning about LangGraph")
 	chatHistory.AddAIMessage(ctx, "That's great! LangGraph is a powerful framework for building stateful, multi-actor applications.")
 
 	// Create memory with the custom chat history
-	mem := prebuilt.NewConversationBufferMemory(
-		memory.WithChatHistory(chatHistory.GetHistory()),
-		memory.WithReturnMessages(true),
+	mem := memory.NewConversationBufferMemory(
+		langchainmemory.WithChatHistory(chatHistory.GetHistory()),
+		langchainmemory.WithReturnMessages(true),
 	)
 
 	fmt.Println("Initial memory loaded from chat history:")

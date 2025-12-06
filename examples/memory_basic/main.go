@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/smallnest/langgraphgo/prebuilt"
+	"github.com/smallnest/langgraphgo/memory"
 	"github.com/tmc/langchaingo/llms"
-	"github.com/tmc/langchaingo/memory"
+	langchainmemory "github.com/tmc/langchaingo/memory"
 )
 
 func main() {
@@ -37,8 +37,8 @@ func main() {
 // basicMemoryExample demonstrates basic conversation buffer usage
 func basicMemoryExample(ctx context.Context) {
 	// Create a conversation buffer memory with return messages enabled
-	mem := prebuilt.NewConversationBufferMemory(
-		memory.WithReturnMessages(true),
+	mem := memory.NewConversationBufferMemory(
+		langchainmemory.WithReturnMessages(true),
 	)
 
 	// Simulate a conversation
@@ -81,8 +81,8 @@ func basicMemoryExample(ctx context.Context) {
 // windowMemoryExample demonstrates conversation window buffer
 func windowMemoryExample(ctx context.Context) {
 	// Create a window buffer that keeps only the last 2 conversation turns
-	mem := prebuilt.NewConversationWindowBufferMemory(2,
-		memory.WithReturnMessages(true),
+	mem := memory.NewConversationWindowBufferMemory(2,
+		langchainmemory.WithReturnMessages(true),
 	)
 
 	// Simulate multiple conversation turns
@@ -124,7 +124,7 @@ func windowMemoryExample(ctx context.Context) {
 // chatHistoryExample demonstrates direct chat message history usage
 func chatHistoryExample(ctx context.Context) {
 	// Create a chat message history
-	history := prebuilt.NewChatMessageHistory()
+	history := memory.NewChatMessageHistory()
 
 	// Add different types of messages
 	err := history.AddMessage(ctx, llms.SystemChatMessage{
@@ -159,13 +159,13 @@ func chatHistoryExample(ctx context.Context) {
 // customKeysExample demonstrates using custom input/output/memory keys
 func customKeysExample(ctx context.Context) {
 	// Create memory with custom keys
-	mem := prebuilt.NewConversationBufferMemory(
-		memory.WithInputKey("user_input"),
-		memory.WithOutputKey("ai_response"),
-		memory.WithMemoryKey("chat_history"),
-		memory.WithReturnMessages(true),
-		memory.WithHumanPrefix("User"),
-		memory.WithAIPrefix("Assistant"),
+	mem := memory.NewConversationBufferMemory(
+		langchainmemory.WithInputKey("user_input"),
+		langchainmemory.WithOutputKey("ai_response"),
+		langchainmemory.WithMemoryKey("chat_history"),
+		langchainmemory.WithReturnMessages(true),
+		langchainmemory.WithHumanPrefix("User"),
+		langchainmemory.WithAIPrefix("Assistant"),
 	)
 
 	// Save context with custom keys
@@ -204,8 +204,8 @@ func memoryIntegrationPattern(ctx context.Context) {
 	fmt.Println()
 
 	// Create memory
-	mem := prebuilt.NewConversationBufferMemory(
-		memory.WithReturnMessages(true),
+	mem := memory.NewConversationBufferMemory(
+		langchainmemory.WithReturnMessages(true),
 	)
 
 	// Simulate conversation turns
