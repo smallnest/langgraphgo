@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/smallnest/langgraphgo/graph"
 	"github.com/smallnest/langgraphgo/llms"
 	"github.com/smallnest/langgraphgo/tool"
 )
@@ -176,3 +177,141 @@ func TestTreeOfThoughtsAgent(t *testing.T) {
 		t.Fatalf("Invoke failed: %v", err)
 	}
 }
+
+func TestCreateForStateHelpers(t *testing.T) {
+	mockLLM := &MockReflectionLLM{
+		responses: []string{
+			"Initial response",
+			"**Strengths:** Good. **Weaknesses:** None. **Suggestions:** None.",
+		},
+	}
+
+	// Test CreateReflectionAgentForState
+	reflConfig := ReflectionAgentConfig{Model: mockLLM, MaxIterations: 2}
+	reflAgent, err := CreateReflectionAgentForState(reflConfig)
+	if err != nil {
+		t.Fatalf("CreateReflectionAgentForState failed: %v", err)
+	}
+	_, err = reflAgent.Invoke(context.Background(), ReflectionAgentState{
+		Messages: []llms.MessageContent{llms.TextParts(llms.ChatMessageTypeHuman, "Test")},
+	})
+	if err != nil {
+		t.Fatalf("reflAgent invoke failed: %v", err)
+	}
+
+	// Test CreatePEVAgentForState
+	pevMockLLM := &PEVMockLLM{
+		responses: []string{
+			"1. Step",
+			`{"tool": "calculator", "tool_input": "2+2"}`,
+			`{"is_successful": true, "reasoning": "Ok"}`,
+			"Final",
+		},
+	}
+	pevConfig := PEVAgentConfig{Model: pevMockLLM, Tools: []tool.Tool{PEVMockTool{name: "calculator"}}}
+	pevAgent, err := CreatePEVAgentForState(pevConfig)
+	if err != nil {
+		t.Fatalf("CreatePEVAgentForState failed: %v", err)
+	}
+	_, err = pevAgent.Invoke(context.Background(), PEVAgentState{
+		Messages: []llms.MessageContent{llms.TextParts(llms.ChatMessageTypeHuman, "Test")},
+	})
+	if err != nil {
+		t.Fatalf("pevAgent invoke failed: %v", err)
+	}
+
+	// Test CreateTreeOfThoughtsAgentForState
+	totConfig := TreeOfThoughtsConfig{
+		Generator:    &SimpleThoughtGenerator{},
+		Evaluator:    &SimpleThoughtEvaluator{},
+		InitialState: &SimpleThoughtState{isGoal: true, isValid: true, desc: "Goal"},
+	}
+	totAgent, err := CreateTreeOfThoughtsAgentForState(totConfig)
+	if err != nil {
+		t.Fatalf("CreateTreeOfThoughtsAgentForState failed: %v", err)
+	}
+	_, err = totAgent.Invoke(context.Background(), TreeOfThoughtsState{})
+	if err != nil {
+		t.Fatalf("totAgent invoke failed: %v", err)
+	}
+
+	// Test CreateAgentForState
+	agentForState, err := CreateAgentForState(mockLLM, []tool.Tool{PEVMockTool{name: "calc"}})
+	if err != nil {
+		t.Fatalf("CreateAgentForState failed: %v", err)
+	}
+	_, err = agentForState.Invoke(context.Background(), AgentState{
+		Messages: []llms.MessageContent{llms.TextParts(llms.ChatMessageTypeHuman, "Test")},
+	})
+	if err != nil {
+		t.Fatalf("agentForState invoke failed: %v", err)
+	}
+
+	// Test CreateReactAgentForState
+	reactForState, err := CreateReactAgentForState(mockLLM, []tool.Tool{PEVMockTool{name: "calc"}}, 5)
+	if err != nil {
+		t.Fatalf("CreateReactAgentForState failed: %v", err)
+	}
+	_, err = reactForState.Invoke(context.Background(), ReactAgentState{
+		Messages: []llms.MessageContent{llms.TextParts(llms.ChatMessageTypeHuman, "Test")},
+	})
+	if err != nil {
+		t.Fatalf("reactForState invoke failed: %v", err)
+	}
+
+	// Test CreatePlanningAgentForState
+	planLLM := &MockPlanningLLM{
+		planJSON: `{"nodes": [{"name": "step1", "type": "process"}], "edges": [{"from": "START", "to": "step1"}, {"from": "step1", "to": "END"}]}`,
+	}
+	planNodes := []graph.TypedNode[PlanningAgentState]{
+		{
+			Name:        "step1",
+			Description: "Step 1",
+			Function: func(ctx context.Context, state PlanningAgentState) (PlanningAgentState, error) {
+				return state, nil
+			},
+		},
+	}
+	planningAgent, err := CreatePlanningAgentForState(planLLM, planNodes)
+	if err != nil {
+		t.Fatalf("CreatePlanningAgentForState failed: %v", err)
+	}
+	_, err = planningAgent.Invoke(context.Background(), PlanningAgentState{
+		Messages: []llms.MessageContent{llms.TextParts(llms.ChatMessageTypeHuman, "Plan something")},
+	})
+	if err != nil {
+		t.Fatalf("planningAgent invoke failed: %v", err)
+	}
+
+	// Test CreateSupervisorForState
+	supLLM := &SupervisorMockLLM{
+		responses: []llms.ContentResponse{
+			{
+				Choices: []*llms.ContentChoice{
+					{
+						ToolCalls: []llms.ToolCall{
+							{
+								FunctionCall: &llms.FunctionCall{
+									Name:      "route",
+									Arguments: `{"next": "FINISH"}`,
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+	supAgent, err := CreateSupervisorForState(supLLM, map[string]*graph.StateRunnable[SupervisorState]{})
+	if err != nil {
+		t.Fatalf("CreateSupervisorForState failed: %v", err)
+	}
+	_, err = supAgent.Invoke(context.Background(), SupervisorState{
+		Messages: []llms.MessageContent{llms.TextParts(llms.ChatMessageTypeHuman, "Coordinate this")},
+	})
+	if err != nil {
+		t.Fatalf("supAgent invoke failed: %v", err)
+	}
+}
+
+

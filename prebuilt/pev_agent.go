@@ -343,6 +343,31 @@ func CreatePEVAgent[S any](
 	return workflow.Compile()
 }
 
+// CreatePEVAgentForState creates a type-safe PEV Agent graph pre-configured for PEVAgentState.
+// This provides compile-time type safety without requiring manual getter/setter closures.
+func CreatePEVAgentForState(config PEVAgentConfig, opts ...CreateAgentOption) (*graph.StateRunnable[PEVAgentState], error) {
+	return CreatePEVAgent[PEVAgentState](
+		config,
+		func(s PEVAgentState) []llms.MessageContent { return s.Messages },
+		func(s PEVAgentState, m []llms.MessageContent) PEVAgentState { s.Messages = m; return s },
+		func(s PEVAgentState) []string { return s.Plan },
+		func(s PEVAgentState, p []string) PEVAgentState { s.Plan = p; return s },
+		func(s PEVAgentState) int { return s.CurrentStep },
+		func(s PEVAgentState, i int) PEVAgentState { s.CurrentStep = i; return s },
+		func(s PEVAgentState) string { return s.LastToolResult },
+		func(s PEVAgentState, r string) PEVAgentState { s.LastToolResult = r; return s },
+		func(s PEVAgentState) []string { return s.IntermediateSteps },
+		func(s PEVAgentState, steps []string) PEVAgentState { s.IntermediateSteps = steps; return s },
+		func(s PEVAgentState) int { return s.Retries },
+		func(s PEVAgentState, r int) PEVAgentState { s.Retries = r; return s },
+		func(s PEVAgentState) string { return s.VerificationResult },
+		func(s PEVAgentState, v string) PEVAgentState { s.VerificationResult = v; return s },
+		func(s PEVAgentState) string { return s.FinalAnswer },
+		func(s PEVAgentState, a string) PEVAgentState { s.FinalAnswer = a; return s },
+		opts...,
+	)
+}
+
 func parsePEVPlanSteps(planText string) []string {
 	var steps []string
 	for line := range strings.SplitSeq(planText, "\n") {

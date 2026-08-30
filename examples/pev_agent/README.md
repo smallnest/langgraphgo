@@ -109,7 +109,7 @@ config := prebuilt.PEVAgentConfig{
     Verbose:    true,
 }
 
-agent, _ := prebuilt.CreatePEVAgent(config)
+agent, err := prebuilt.CreatePEVAgentMap(config)
 ```
 
 **Query**: "Calculate the result of 15 multiplied by 8"

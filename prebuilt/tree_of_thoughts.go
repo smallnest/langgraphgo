@@ -240,3 +240,19 @@ func CreateTreeOfThoughtsAgent[S any](
 
 	return workflow.Compile()
 }
+
+// CreateTreeOfThoughtsAgentForState creates a type-safe Tree of Thoughts Agent graph pre-configured for TreeOfThoughtsState.
+// This provides compile-time type safety without requiring manual getter/setter closures.
+func CreateTreeOfThoughtsAgentForState(config TreeOfThoughtsConfig) (*graph.StateRunnable[TreeOfThoughtsState], error) {
+	return CreateTreeOfThoughtsAgent[TreeOfThoughtsState](
+		config,
+		func(s TreeOfThoughtsState) map[string]*SearchPath { return s.ActivePaths },
+		func(s TreeOfThoughtsState, p map[string]*SearchPath) TreeOfThoughtsState { s.ActivePaths = p; return s },
+		func(s TreeOfThoughtsState) string { return s.Solution },
+		func(s TreeOfThoughtsState, sol string) TreeOfThoughtsState { s.Solution = sol; return s },
+		func(s TreeOfThoughtsState) map[string]bool { return s.VisitedStates },
+		func(s TreeOfThoughtsState, v map[string]bool) TreeOfThoughtsState { s.VisitedStates = v; return s },
+		func(s TreeOfThoughtsState) int { return s.Iteration },
+		func(s TreeOfThoughtsState, i int) TreeOfThoughtsState { s.Iteration = i; return s },
+	)
+}

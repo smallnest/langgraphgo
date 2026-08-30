@@ -145,7 +145,7 @@ func (t HotelBookingTool) Call(ctx context.Context, input string) (string, error
 ### Creating the Agent
 
 ```go
-agent, err := prebuilt.CreateReactAgentMap(llm, allTools, 10)
+agent, err := prebuilt.CreateAgentMap(llm, allTools, 10)
 if err != nil {
     log.Fatal(err)
 }

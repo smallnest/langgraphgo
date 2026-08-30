@@ -252,6 +252,24 @@ func CreatePlanningAgent[S any](
 	return workflow.Compile()
 }
 
+// CreatePlanningAgentForState creates a type-safe planning agent pre-configured for PlanningAgentState.
+// This provides compile-time type safety without requiring manual getter/setter closures.
+func CreatePlanningAgentForState(
+	model llms.Model,
+	availableNodes []graph.TypedNode[PlanningAgentState],
+	opts ...CreateAgentOption,
+) (*graph.StateRunnable[PlanningAgentState], error) {
+	return CreatePlanningAgent[PlanningAgentState](
+		model,
+		availableNodes,
+		func(s PlanningAgentState) []llms.MessageContent { return s.Messages },
+		func(s PlanningAgentState, m []llms.MessageContent) PlanningAgentState { s.Messages = m; return s },
+		func(s PlanningAgentState) *WorkflowPlan { return s.WorkflowPlan },
+		func(s PlanningAgentState, p *WorkflowPlan) PlanningAgentState { s.WorkflowPlan = p; return s },
+		opts...,
+	)
+}
+
 func buildPlanningNodeDescriptions[S any](nodes []graph.TypedNode[S]) string {
 	var sb strings.Builder
 	sb.WriteString("Available nodes:\n")

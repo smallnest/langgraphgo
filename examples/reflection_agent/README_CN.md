@@ -75,7 +75,7 @@ func main() {
     }
 
     // 创建代理
-    agent, err := prebuilt.CreateReflectionAgent(config)
+    agent, err := prebuilt.CreateReflectionAgentMap(config)
     if err != nil {
         log.Fatal(err)
     }

@@ -166,25 +166,28 @@
 //		},
 //	})
 //
-// # Typed vs Map Constructors
+// # Agent State Constructor Tiers
 //
-// Every agent ships two entry points that are parallel full implementations,
-// not thin wrappers around each other. Pick by how you model state:
+// Every agent pattern provides three constructor tiers to balance speed, type safety, and customizability:
 //
-//   - Create<X>AgentMap: operates on map[string]any and registers a MapSchema
-//     with reducers (e.g. "messages" uses AppendReducer), so parallel nodes and
-//     message accumulation merge automatically. No accessor functions needed —
-//     pass only the model/tools/config. Best for quick starts and the common
-//     case; this is the API most examples use.
-//   - Create<X>Agent[S]: generic over your own state type S for compile-time
-//     safety. You inject getter/setter closures (CreatePEVAgent needs ~8 pairs)
-//     and it registers no reducers — each setter returns the fully-computed next
-//     state. Best when you already have a strongly-typed state struct.
+//   - Tier 1: Map Constructors (Create<X>AgentMap)
+//     Operate on map[string]any and register a MapSchema with reducers (e.g. "messages"
+//     uses AppendReducer), enabling automated delta merging and parallel fan-out.
+//     Zero accessor boilerplate — pass only model/tools/config. Recommended for quick
+//     prototyping and dynamic workflows.
 //
-// The two are not interchangeable via a single generic adapter: the Map variants
-// carry reducer-based merge semantics that the typed variants deliberately leave
-// to the caller's setters. Choose the Map form unless you need typed state.
+//   - Tier 2: Pre-Wired Struct Constructors (Create<X>AgentForState)
+//     Provide compile-time type safety using standard prebuilt state structs
+//     (e.g., PEVAgentState, ReflectionAgentState, TreeOfThoughtsState, AgentState).
+//     Zero closure boilerplate — accessors are wired internally. Recommended for
+//     type-safe production applications.
 //
+//   - Tier 3: Generic Custom State Constructors (Create<X>Agent[S])
+//     Full compile-time type safety over your own domain-specific struct type S.
+//     Requires injecting getter/setter closures for field transformations.
+//     Recommended when embedding the agent within an existing proprietary data model.
+//
+
 // # RAG (Retrieval-Augmented Generation)
 //
 // ## Basic RAG Agent

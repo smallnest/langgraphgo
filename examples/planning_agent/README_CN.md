@@ -42,7 +42,7 @@ nodes := []*graph.Node{
 
 ### 步骤 2：创建 Planning Agent
 ```go
-agent, err := prebuilt.CreatePlanningAgent(
+agent, err := prebuilt.CreatePlanningAgentMap(
     model,
     nodes,
     []tools.Tool{},

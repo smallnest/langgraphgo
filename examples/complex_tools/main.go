@@ -161,7 +161,7 @@ func main() {
 	fmt.Println("=== 使用ReAct代理调用工具（支持复杂schema） ===")
 	fmt.Println()
 
-	agent, err := prebuilt.CreateReactAgentMap(llm, allTools, 10)
+	agent, err := prebuilt.CreateAgentMap(llm, allTools, 10)
 	if err != nil {
 		log.Fatal(err)
 	}
