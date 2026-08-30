@@ -462,6 +462,24 @@ func CreateAgent[S any](
 	return workflow.Compile()
 }
 
+// CreateAgentForState creates a type-safe Agent graph pre-configured for AgentState.
+// This provides compile-time type safety without requiring manual getter/setter closures.
+func CreateAgentForState(
+	model llms.Model,
+	inputTools []tool.Tool,
+	opts ...CreateAgentOption,
+) (*graph.StateRunnable[AgentState], error) {
+	return CreateAgent[AgentState](
+		model,
+		inputTools,
+		func(s AgentState) []llms.MessageContent { return s.Messages },
+		func(s AgentState, m []llms.MessageContent) AgentState { s.Messages = m; return s },
+		func(s AgentState) []tool.Tool { return s.ExtraTools },
+		func(s AgentState, t []tool.Tool) AgentState { s.ExtraTools = t; return s },
+		opts...,
+	)
+}
+
 func discoverSkills(skillDir string) (map[string]*goskills.SkillPackage, error) {
 	packages, err := goskills.ParseSkillPackages(skillDir)
 	if err != nil {

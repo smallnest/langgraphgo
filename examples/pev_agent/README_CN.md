@@ -109,7 +109,7 @@ config := prebuilt.PEVAgentConfig{
     Verbose:    true,
 }
 
-agent, _ := prebuilt.CreatePEVAgent(config)
+agent, err := prebuilt.CreatePEVAgentMap(config)
 ```
 
 **查询**："计算 15 乘以 8 的结果"

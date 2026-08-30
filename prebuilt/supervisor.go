@@ -186,3 +186,18 @@ func CreateSupervisor[S any](
 
 	return workflow.Compile()
 }
+
+// CreateSupervisorForState creates a type-safe supervisor graph pre-configured for SupervisorState.
+// This provides compile-time type safety without requiring manual getter/setter closures.
+func CreateSupervisorForState(
+	model llms.Model,
+	members map[string]*graph.StateRunnable[SupervisorState],
+) (*graph.StateRunnable[SupervisorState], error) {
+	return CreateSupervisor[SupervisorState](
+		model,
+		members,
+		func(s SupervisorState) []llms.MessageContent { return s.Messages },
+		func(s SupervisorState) string { return s.Next },
+		func(s SupervisorState, n string) SupervisorState { s.Next = n; return s },
+	)
+}

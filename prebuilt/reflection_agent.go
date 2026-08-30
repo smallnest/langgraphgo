@@ -203,6 +203,22 @@ func CreateReflectionAgent[S any](
 	return workflow.Compile()
 }
 
+// CreateReflectionAgentForState creates a type-safe Reflection Agent graph pre-configured for ReflectionAgentState.
+// This provides compile-time type safety without requiring manual getter/setter closures.
+func CreateReflectionAgentForState(config ReflectionAgentConfig) (*graph.StateRunnable[ReflectionAgentState], error) {
+	return CreateReflectionAgent[ReflectionAgentState](
+		config,
+		func(s ReflectionAgentState) []llms.MessageContent { return s.Messages },
+		func(s ReflectionAgentState, m []llms.MessageContent) ReflectionAgentState { s.Messages = m; return s },
+		func(s ReflectionAgentState) string { return s.Draft },
+		func(s ReflectionAgentState, d string) ReflectionAgentState { s.Draft = d; return s },
+		func(s ReflectionAgentState) int { return s.Iteration },
+		func(s ReflectionAgentState, i int) ReflectionAgentState { s.Iteration = i; return s },
+		func(s ReflectionAgentState) string { return s.Reflection },
+		func(s ReflectionAgentState, r string) ReflectionAgentState { s.Reflection = r; return s },
+	)
+}
+
 func isResponseSatisfactory(reflection string) bool {
 	reflectionLower := strings.ToLower(reflection)
 	satisfactoryKeywords := []string{"excellent", "satisfactory", "no major issues", "well done", "accurate", "meets all requirements"}

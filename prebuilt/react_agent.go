@@ -302,3 +302,21 @@ func CreateReactAgent[S any](
 
 	return workflow.Compile()
 }
+
+// CreateReactAgentForState creates a type-safe ReAct agent graph pre-configured for ReactAgentState.
+// This provides compile-time type safety without requiring manual getter/setter closures.
+func CreateReactAgentForState(
+	model llms.Model,
+	inputTools []tool.Tool,
+	maxIterations int,
+) (*graph.StateRunnable[ReactAgentState], error) {
+	return CreateReactAgent[ReactAgentState](
+		model,
+		inputTools,
+		func(s ReactAgentState) []llms.MessageContent { return s.Messages },
+		func(s ReactAgentState, m []llms.MessageContent) ReactAgentState { s.Messages = m; return s },
+		func(s ReactAgentState) int { return s.IterationCount },
+		func(s ReactAgentState, i int) ReactAgentState { s.IterationCount = i; return s },
+		maxIterations,
+	)
+}
